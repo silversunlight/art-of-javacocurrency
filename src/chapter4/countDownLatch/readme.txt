@@ -1,0 +1,19 @@
+
+场景1：
+假设一条流水线上有三个工作者：worker0，worker1，worker2。有一个任务的完成需要
+他们三者协作完成，worker2可以开始这个任务的前提是worker0和worker1完成了他们的工作，
+而worker0和worker1是可以并行他们各自的工作的。
+
+可以使用join来完成  package joinMethod
+也可以使用countdownLatch赖完成 package countdwonLatch
+
+场景2：
+假设worker的工作可以分为两个阶段，work2 只需要等待work0和work1完成他们各自工作的
+第一个阶段之后就可以开始自己的工作了，而不是场景1中的必须等待work0和work1把他们
+的工作全部完成之后才能开始。
+
+试想下，在这种情况下，join是没办法实现这个场景的，而CountDownLatch却可以，因为它
+持有一个计数器，只要计数器为0，那么主线程就可以结束阻塞往下执行。我们可以在worker0
+和worker1完成第一阶段工作之后就把计数器减1即可，这样worker0和worker1在完成第一阶段
+工作之后，worker2就可以开始工作了。
+
